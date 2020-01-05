@@ -11,10 +11,10 @@ require-%:
 
 build: require-DOCKER_HUB_REPO require-VERSION require-VERSION_LATEST
 ifeq ("$(VERSION)","$(VERSION_LATEST)")
-	DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_FLAGS) \
+	docker build $(DOCKER_BUILD_FLAGS) \
 		--tag "$(DOCKER_HUB_REPO):latest" .
 else
-	DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_FLAGS) .
+	docker build $(DOCKER_BUILD_FLAGS) .
 endif
 
 deploy: require-DOCKER_HUB_REPO require-DOCKER_HUB_USER require-DOCKER_HUB_PASS require-VERSION require-VERSION_LATEST
