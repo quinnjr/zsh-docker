@@ -30,7 +30,13 @@ RUN apk update && \
     musl-dev \
     make \
     git \
+<<<<<<< HEAD
     gcc
+=======
+    gcc \
+    libstdc++ \
+    build-base
+>>>>>>> develop
 
 RUN if [[ "$VERSION" == "$VERSION_LATEST" && ! -f "./$VERSION.tar.xz" ]]; then \
   curl -L "https://www.zsh.org/pub/zsh-$VERSION.tar.xz" | tar -xJ --strip=1 && \
@@ -43,7 +49,12 @@ RUN if [[ "$VERSION" == "$VERSION_LATEST" && ! -f "./$VERSION.tar.xz" ]]; then \
 
 RUN ./Util/preconfig
 
-RUN CC=/usr/bin/clang PM=$(nproc) CFLAGS="-std=gnu11 -mtune=generic -O2 -pipe $CFLAGS" \
+RUN CC=clang \
+  CXX=clang++ \
+  PM=$(nproc) \
+  CFLAGS="-O2 -mtune=generic -march=native -pipe $CFLAGS" \
+  CXXFLAGS="-O2 -mtune=generic -march=native -pipe -std=c++14 -lm" \
+  LDFLAGS="-L/usr/include/c++/9.2.0 -L/usr/include -lm" \
   MAKEFLAGS="-j$(nproc) $MAKEFLAGS" \
   ./configure --prefix=/usr \
     --sysconfdir=/etc \
@@ -65,12 +76,12 @@ RUN CC=/usr/bin/clang PM=$(nproc) CFLAGS="-std=gnu11 -mtune=generic -O2 -pipe $C
     --enable-cap \
     --enable-multibyte \
     --with-tcsetpgrp \
-    --enable-zsh-secure-free
-
-RUN mkdir -p /tmp/install && \
+    --enable-zsh-secure-free && \
+  mkdir -p /tmp/install && \
   make DESTDIR=/tmp/install install && \
-  install -Dm644 LICENCE "/tmp/install/usr/share/licenses/zsh/LICENSE" && \
   /usr/bin/strip --strip-debug --strip-unneeded "/tmp/install/usr/bin/zsh"
+
+RUN install -Dm644 LICENCE "/tmp/install/usr/share/licenses/zsh/LICENSE"
 
 COPY zprofile /tmp/install/etc/zsh/
 

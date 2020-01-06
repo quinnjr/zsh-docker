@@ -41,6 +41,6 @@ A small, statically compiled [Z-shell](https://zsh.org) container.
 (Further 4.x versions can be made upon request)
 
 ## Todo
-- Move from gcc-musl to clang-musl
 - Minimize initial dependecies.
 - Work around lousy Yodl dependency for documentation generation.
+- Consider droping gdbm
