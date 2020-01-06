@@ -31,12 +31,15 @@ RUN apk update && \
     make \
     git \
     gcc
-    
+
 RUN if [[ "$VERSION" == "$VERSION_LATEST" && ! -f "./$VERSION.tar.xz" ]]; then \
   curl -L "https://www.zsh.org/pub/zsh-$VERSION.tar.xz" | tar -xJ --strip=1 && \
   curl -L "https://www.zsh.org/pub/zsh-$VERSION-doc.tar.xz" | tar -xJ --strip=1; \
   else curl -L "https://www.zsh.org/pub/old/zsh-$VERSION.tar.xz" | tar xJ --strip=1 && \
-  curl -L "https://www.zsh.org/pub/old/zsh-$VERSION-doc.tar.xz" | tar xJ --strip=1; fi
+  curl -L "https://www.zsh.org/pub/old/zsh-$VERSION-doc.tar.xz" | tar xJ --strip=1; fi && \
+  for _fpath in AIX BSD Cygwin Darwin Debian Mandriva openSUSE Redhat Solaris; do \
+   	rm -rf Completion/$_fpath && sed "s#\s*Completion/$_fpath/\*/\*##g" -i Src/Zle/complete.mdd; done && \
+  rm -Rf ./Test/{A01grammar,V09datetime}.ztst
 
 RUN ./Util/preconfig
 
