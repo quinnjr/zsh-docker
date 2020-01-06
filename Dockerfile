@@ -30,13 +30,9 @@ RUN apk update && \
     musl-dev \
     make \
     git \
-<<<<<<< HEAD
-    gcc
-=======
     gcc \
     libstdc++ \
     build-base
->>>>>>> develop
 
 RUN if [[ "$VERSION" == "$VERSION_LATEST" && ! -f "./$VERSION.tar.xz" ]]; then \
   curl -L "https://www.zsh.org/pub/zsh-$VERSION.tar.xz" | tar -xJ --strip=1 && \
